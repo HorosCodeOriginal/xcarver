@@ -1,0 +1,9 @@
+xcarver (4.0.0-1) unstable; urgency=low
+
+  * Initial Debian packaging
+  * Dual-engine FS-aware + raw carving
+  * 119 file type signatures with structural validators
+  * Persistent C Aho-Corasick handle (v4 API)
+  * Session resume, entropy skip, CTF mode
+
+ -- z0rhack <abyyolab@gmail.com>  Mon, 30 Mar 2026 00:00:00 +0000

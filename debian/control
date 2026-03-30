@@ -1,0 +1,25 @@
+Source: xcarver
+Section: forensics
+Priority: optional
+Maintainer: z0rhack <abyyolab@gmail.com>
+Build-Depends: debhelper-compat (= 13), python3, gcc
+Standards-Version: 4.6.2
+Homepage: https://github.com/z0rhack/xcarver
+Rules-Requires-Root: no
+
+Package: xcarver
+Architecture: any
+Depends: python3 (>= 3.8), gcc, ${misc:Depends}
+Recommends: python3-pyewf
+Description: Dual-engine forensic file carver
+ xCarver recovers deleted files using two complementary engines:
+ filesystem-aware recovery (preserving original names, paths, and
+ timestamps) and raw carving with 119 byte-signature patterns.
+ .
+ Supports FAT12/16/32, exFAT, NTFS, ext2/3/4, HFS+, APFS, F2FS,
+ Btrfs, and YAFFS2. High-performance C scanner using Aho-Corasick
+ multi-pattern automaton with multithreaded processing.
+ .
+ Features: entropy-based skip for encrypted zones, CTF mode with
+ entropy heatmap, session resumption, SHA256 cross-deduplication,
+ recursive archive extraction, and external JSON signatures.

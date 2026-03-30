@@ -1,0 +1,7 @@
+# xCarver v4 — Dependencies
+# All core features use Python stdlib only (Python 3.8+)
+# GCC is required for the high-performance C scanner (optional but strongly recommended)
+
+# Optional: EnCase/E01 forensic image support
+# pip install pyewf
+# pyewf>=20231119

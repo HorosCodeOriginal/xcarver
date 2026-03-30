@@ -1,0 +1,14 @@
+#!/usr/bin/make -f
+%:
+	dh $@
+
+override_dh_auto_build:
+	gcc -O3 -march=native -shared -fPIC -pthread -o scanner.so scanner.c
+
+override_dh_auto_install:
+	install -d $(DESTDIR)/usr/share/xcarver
+	install -m 644 carver.py signatures.py fs_parser.py scanner.c \
+		$(DESTDIR)/usr/share/xcarver/
+	install -m 755 scanner.so $(DESTDIR)/usr/share/xcarver/
+	install -d $(DESTDIR)/usr/bin
+	install -m 755 debian/xcarver.sh $(DESTDIR)/usr/bin/xcarver

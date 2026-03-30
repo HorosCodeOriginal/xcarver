@@ -1,0 +1,49 @@
+# Compiled C library (platform-specific, auto-recompiled on first run)
+scanner.so
+scanner.dll
+scanner.dylib
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Session files
+*.session
+*.xcarver_session
+
+# Output directories (carved files)
+carved/
+carved_*/
+recovered/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# PyInstaller build artifacts
+build/
+dist/
+*.spec
+
+# Test artifacts
+test_output/
+*.dd
+*.img
+*.bin
+*.raw
+
+# Logs
+*.log
