@@ -1,0 +1,15 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:HorosCarver.ViewModels.Previews"
+        xmlns:components="using:HorosCarver.Views.Components"
+        x:Class="HorosCarver.Views.Previews.SourcePanelPreview"
+        x:DataType="vm:SourcePanelPreviewViewModel"
+        Title="Preview: R02 Quelle-Panel"
+        Width="720"
+        Height="520"
+        Background="{DynamicResource BrushBackgroundBase}"
+        Padding="24">
+
+    <components:HorosSourcePanel DataContext="{Binding Source}" />
+
+</Window>

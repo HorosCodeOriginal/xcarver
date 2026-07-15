@@ -34,13 +34,35 @@ Usage :
 """
 
 import sys, os, struct, ctypes, hashlib, json, math, datetime, argparse
-import subprocess, platform, time, zipfile, gzip, bz2
+import subprocess, platform, time, zipfile, gzip, bz2, shutil
 from pathlib import Path
 from collections import defaultdict
 
 IS_WINDOWS = sys.platform == "win32"
 IS_LINUX   = sys.platform.startswith("linux")
 IS_MACOS   = sys.platform == "darwin"
+
+_WIN_PTHREAD_DLL = "libwinpthread-1.dll"
+
+
+def _configure_stdio():
+    """UTF-8 console output (avoids cp1252 UnicodeEncodeError on Windows)."""
+    if IS_WINDOWS:
+        try:
+            ctypes.windll.kernel32.SetConsoleOutputCP(65001)
+            ctypes.windll.kernel32.SetConsoleCP(65001)
+        except Exception:
+            pass
+    for stream in (sys.stdout, sys.stderr):
+        reconfigure = getattr(stream, "reconfigure", None)
+        if reconfigure:
+            try:
+                reconfigure(encoding="utf-8", errors="replace")
+            except Exception:
+                pass
+
+
+_configure_stdio()
 
 # ── Couleurs ANSI ─────────────────────────────────────────────────
 def _enable_ansi():
@@ -90,6 +112,42 @@ _so: ctypes.CDLL | None = None
 _use_persistent = False
 
 
+def _find_mingw_bin() -> Path | None:
+    gcc = shutil.which("gcc")
+    if not gcc:
+        return None
+    for candidate in (Path(gcc).resolve().parent,
+                      Path(gcc).resolve().parent.parent / "bin"):
+        if (candidate / _WIN_PTHREAD_DLL).exists():
+            return candidate
+    return None
+
+
+def _ensure_windows_scanner_deps() -> None:
+    """Place MinGW pthread runtime beside scanner.dll for ctypes load."""
+    if not IS_WINDOWS:
+        return
+    dest = script_dir / _WIN_PTHREAD_DLL
+    if dest.exists():
+        return
+    mingw = _find_mingw_bin()
+    if not mingw:
+        return
+    try:
+        shutil.copy2(mingw / _WIN_PTHREAD_DLL, dest)
+    except OSError:
+        pass
+
+
+def _load_scanner_lib(lib: Path) -> ctypes.CDLL:
+    if IS_WINDOWS and hasattr(os, "add_dll_directory"):
+        os.add_dll_directory(str(script_dir))
+        mingw = _find_mingw_bin()
+        if mingw:
+            os.add_dll_directory(str(mingw))
+    return ctypes.CDLL(str(lib))
+
+
 def _compile_and_load():
     global _so, _use_persistent
     src = script_dir / "scanner.c"
@@ -103,12 +161,9 @@ def _compile_and_load():
 
     if needs_compile:
         print(f"  {DIM}Compilation scanner C…{R}", end="", flush=True)
-        cmd = ["gcc", "-O3", "-shared", "-fPIC", "-pthread",
-               f"-o{lib}", str(src)]
+        cmd = ["gcc", "-O3", "-shared", "-pthread", f"-o{lib}", str(src)]
         if not IS_WINDOWS:
-            cmd.insert(2, "-march=native")
-        else:
-            cmd = ["gcc", "-O3", "-shared", f"-o{lib}", str(src)]
+            cmd[3:3] = ["-fPIC", "-march=native"]
         r = subprocess.run(cmd, capture_output=True)
         if r.returncode != 0:
             print(f"\r  {YLW}Compilation échouée → mode Python pur{R}")
@@ -116,9 +171,12 @@ def _compile_and_load():
                 print(f"  {DIM}{r.stderr.decode(errors='replace')[:200]}{R}")
             return None
         print(f"\r  {GRN}Scanner C compilé (v4 — handle persistant){R}         ")
+        if IS_WINDOWS:
+            _ensure_windows_scanner_deps()
 
     try:
-        so = ctypes.CDLL(str(lib))
+        _ensure_windows_scanner_deps()
+        so = _load_scanner_lib(lib)
 
         # API v4 — handle persistant
         so.xc_create.restype  = ctypes.c_void_p
@@ -1076,6 +1134,8 @@ def main():
     parser.add_argument("--types",      "-t", default=None,
         help="Types/catégories : jpeg,pdf,image,document,all (défaut: all)")
     parser.add_argument("--list-devices","-l", action="store_true")
+    parser.add_argument("--list-devices-json", action="store_true",
+        help="Liste des devices en JSON (pour HorosCarver GUI)")
     parser.add_argument("--list-types",        action="store_true")
     parser.add_argument("--fs-only",           action="store_true",
         help="FS uniquement (pas de raw carving)")
@@ -1111,6 +1171,16 @@ def main():
     # ── Actions immédiates ────────────────────────────────────────
     if args.list_types:
         list_signatures(); return
+
+    if args.list_devices_json:
+        devs = list_devices()
+        payload = [
+            {"path": d.path, "name": d.name, "size": d.size,
+             "removable": d.removable, "model": d.model, "fstype": d.fstype}
+            for d in devs
+        ]
+        print(json.dumps(payload, ensure_ascii=False))
+        return
 
     if args.list_devices:
         devs = list_devices()

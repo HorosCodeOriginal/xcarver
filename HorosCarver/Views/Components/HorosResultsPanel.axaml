@@ -1,0 +1,181 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:HorosCarver.ViewModels"
+             xmlns:previews="using:HorosCarver.Views.Previews"
+             x:Class="HorosCarver.Views.Components.HorosResultsPanel"
+             x:DataType="vm:ResultsViewModel"
+             Width="{DynamicResource ResultsPanelWidth}">
+
+    <Design.PreviewWith>
+        <previews:ResultsPanelPreview />
+    </Design.PreviewWith>
+
+    <Border Background="{DynamicResource BrushSurfaceDefault}"
+            BorderBrush="{DynamicResource BrushBorderDefault}"
+            BorderThickness="1,0,0,0">
+        <DockPanel LastChildFill="True" Margin="{DynamicResource Spacing4}">
+
+            <!-- Header row: title + Ordner-öffnen button -->
+            <Grid DockPanel.Dock="Top"
+                  ColumnDefinitions="*,Auto"
+                  Margin="0,0,0,12">
+                <TextBlock Grid.Column="0"
+                           Text="Ergebnisse"
+                           Classes="horos-section-title"
+                           VerticalAlignment="Center" />
+                <Button Grid.Column="1"
+                        Content="📁 Ordner öffnen"
+                        Command="{Binding OpenOutputFolderCommand}"
+                        IsVisible="{Binding CanOpenFolder}"
+                        Classes="horos-button-secondary"
+                        Padding="10,5"
+                        FontSize="{DynamicResource FontSizeAppTitle}"
+                        AutomationProperties.Name="Ausgabeordner im Explorer öffnen" />
+            </Grid>
+
+            <Border DockPanel.Dock="Top"
+                    IsVisible="{Binding IsScanning}"
+                    Classes="horos-card"
+                    Margin="0,0,0,12"
+                    Padding="12">
+                <StackPanel Spacing="8">
+                    <TextBlock Text="{Binding ScanPhase}"
+                               Foreground="{DynamicResource BrushAccentPrimary}"
+                               FontSize="{DynamicResource FontSizeAppTitle}" />
+                    <ProgressBar Minimum="0"
+                                 Maximum="100"
+                                 Value="{Binding ProgressPercent}"
+                                 Height="6"
+                                 Foreground="{DynamicResource BrushAccentPrimary}" />
+                    <TextBlock Text="{Binding ProgressPercent, StringFormat={}{0} %}"
+                               Classes="horos-status"
+                               HorizontalAlignment="Right" />
+                    <Grid ColumnDefinitions="*,*">
+                        <StackPanel Grid.Column="0" Spacing="2">
+                            <TextBlock Text="Wiederhergestellt"
+                                       Classes="horos-status" />
+                            <TextBlock Text="{Binding LiveRecoveredCount}"
+                                       FontSize="20"
+                                       FontWeight="SemiBold"
+                                       Foreground="{DynamicResource BrushTextPrimary}" />
+                        </StackPanel>
+                        <StackPanel Grid.Column="1" Spacing="2">
+                            <TextBlock Text="Fortschritt"
+                                       Classes="horos-status" />
+                            <TextBlock Text="{Binding ProgressPercent, StringFormat={}{0} %}"
+                                       FontSize="20"
+                                       FontWeight="SemiBold"
+                                       Foreground="{DynamicResource BrushTextPrimary}" />
+                        </StackPanel>
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <TextBlock DockPanel.Dock="Top"
+                       Text="{Binding SummaryLine}"
+                       IsVisible="{Binding HasResults}"
+                       Classes="horos-status"
+                       Margin="0,0,0,8"
+                       TextWrapping="Wrap" />
+
+            <StackPanel DockPanel.Dock="Top"
+                        IsVisible="{Binding ShowPlaceholder}"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Center"
+                        Spacing="12"
+                        Margin="0,32,0,16">
+                <Border Width="48" Height="48"
+                        CornerRadius="24"
+                        Background="{DynamicResource BrushNavActiveBg}"
+                        HorizontalAlignment="Center">
+                    <TextBlock Text="?"
+                               FontSize="22"
+                               Foreground="{DynamicResource BrushTextMuted}"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center" />
+                </Border>
+                <TextBlock Text="{Binding PlaceholderText}"
+                           Foreground="{DynamicResource BrushTextMuted}"
+                           FontSize="{DynamicResource FontSizeNav}"
+                           TextAlignment="Center"
+                           TextWrapping="Wrap"
+                           MaxWidth="260" />
+            </StackPanel>
+
+            <!-- Scan-Protokoll: sichtbar sobald Log-Zeilen vorhanden -->
+            <Border DockPanel.Dock="Bottom"
+                    IsVisible="{Binding HasLogLines}"
+                    Background="{DynamicResource BrushBackgroundBase}"
+                    BorderBrush="{DynamicResource BrushBorderDefault}"
+                    BorderThickness="0,1,0,0"
+                    MaxHeight="140"
+                    Margin="0,8,0,0"
+                    Padding="0,6,0,0">
+                <DockPanel LastChildFill="True">
+                    <TextBlock DockPanel.Dock="Top"
+                               Text="Scan-Protokoll"
+                               Classes="horos-status"
+                               FontWeight="SemiBold"
+                               Margin="0,0,0,4" />
+                    <ScrollViewer x:Name="LogScrollViewer"
+                                  HorizontalScrollBarVisibility="Disabled"
+                                  VerticalScrollBarVisibility="Auto">
+                        <ItemsControl ItemsSource="{Binding LogLines}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding}"
+                                               FontFamily="Consolas,Courier New,monospace"
+                                               FontSize="10"
+                                               Foreground="{DynamicResource BrushTextMuted}"
+                                               TextWrapping="Wrap"
+                                               Margin="0,1" />
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+                </DockPanel>
+            </Border>
+
+            <!-- Ergebnisliste -->
+            <ScrollViewer IsVisible="{Binding HasResults}">
+                <ItemsControl ItemsSource="{Binding RecentFiles}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate x:DataType="vm:ResultEntryViewModel">
+                            <Border Classes="horos-result-item"
+                                    Margin="0,0,0,8"
+                                    Focusable="True"
+                                    Cursor="Hand"
+                                    DoubleTapped="OnResultItemDoubleTapped"
+                                    KeyDown="OnResultItemKeyDown"
+                                    ToolTip.Tip="Doppelklick oder Enter zum Öffnen">
+                                <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto">
+                                    <TextBlock Grid.Row="0" Grid.Column="0"
+                                               Text="{Binding Name}"
+                                               Foreground="{DynamicResource BrushTextPrimary}"
+                                               FontSize="{DynamicResource FontSizeAppTitle}"
+                                               TextTrimming="CharacterEllipsis" />
+                                    <Border Grid.Row="0" Grid.Column="1"
+                                            Background="{DynamicResource BrushNavActiveBg}"
+                                            CornerRadius="3"
+                                            Padding="6,2"
+                                            VerticalAlignment="Center">
+                                        <TextBlock Text="{Binding Category}"
+                                                   Foreground="{DynamicResource BrushAccentPrimary}"
+                                                   FontSize="10" />
+                                    </Border>
+                                    <TextBlock Grid.Row="1" Grid.Column="0"
+                                               Grid.ColumnSpan="2"
+                                               Text="{Binding Path}"
+                                               Classes="horos-status"
+                                               TextTrimming="CharacterEllipsis"
+                                               Margin="0,4,0,0" />
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+
+        </DockPanel>
+    </Border>
+</UserControl>

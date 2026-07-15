@@ -1,0 +1,132 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Style Selector="Button.horos-nav">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Padding" Value="12,0" />
+        <Setter Property="Height" Value="{DynamicResource NavItemHeight}" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="HorizontalContentAlignment" Value="Left" />
+        <Setter Property="Foreground" Value="{DynamicResource BrushTextPrimary}" />
+        <Setter Property="FontSize" Value="{DynamicResource FontSizeNav}" />
+        <Setter Property="CornerRadius" Value="{DynamicResource RadiusSm}" />
+        <Setter Property="Cursor" Value="Hand" />
+    </Style>
+
+    <Style Selector="Button.horos-nav:pointerover">
+        <Setter Property="Background" Value="{DynamicResource BrushSurfaceElevated}" />
+    </Style>
+
+    <Style Selector="Button.horos-nav.active">
+        <Setter Property="Background" Value="{DynamicResource BrushNavActiveBg}" />
+        <Setter Property="Foreground" Value="{DynamicResource BrushAccentPrimary}" />
+    </Style>
+
+    <Style Selector="TextBlock.horos-brand">
+        <Setter Property="FontSize" Value="{DynamicResource FontSizeBrand}" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="Foreground" Value="{DynamicResource BrushAccentPrimary}" />
+    </Style>
+
+    <Style Selector="TextBlock.horos-app-subtitle">
+        <Setter Property="FontSize" Value="{DynamicResource FontSizeAppTitle}" />
+        <Setter Property="Foreground" Value="{DynamicResource BrushTextMuted}" />
+    </Style>
+
+    <Style Selector="TextBlock.horos-status">
+        <Setter Property="FontSize" Value="{DynamicResource FontSizeStatus}" />
+        <Setter Property="Foreground" Value="{DynamicResource BrushTextMuted}" />
+    </Style>
+
+    <Style Selector="Border.horos-card">
+        <Setter Property="Background" Value="{DynamicResource BrushSurfaceDefault}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BrushBorderDefault}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{DynamicResource RadiusSm}" />
+        <Setter Property="Padding" Value="{DynamicResource Spacing4}" />
+    </Style>
+
+    <Style Selector="Border.horos-dropzone">
+        <Setter Property="Background" Value="{DynamicResource BrushBackgroundBase}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BrushBorderDefault}" />
+        <Setter Property="BorderThickness" Value="2" />
+        <Setter Property="CornerRadius" Value="{DynamicResource RadiusSm}" />
+        <Setter Property="Padding" Value="{DynamicResource Spacing6}" />
+    </Style>
+
+    <Style Selector="Border.horos-dropzone">
+        <Setter Property="BorderBrush" Value="{DynamicResource BrushBorderDefault}" />
+    </Style>
+
+    <Style Selector="TextBlock.horos-section-title">
+        <Setter Property="FontSize" Value="{DynamicResource FontSizeSectionTitle}" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="Foreground" Value="{DynamicResource BrushTextPrimary}" />
+    </Style>
+
+    <Style Selector="Button.horos-button-secondary">
+        <Setter Property="Background" Value="{DynamicResource BrushSurfaceElevated}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BrushBorderDefault}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Foreground" Value="{DynamicResource BrushTextPrimary}" />
+        <Setter Property="CornerRadius" Value="{DynamicResource RadiusSm}" />
+        <Setter Property="Padding" Value="16,8" />
+        <Setter Property="Cursor" Value="Hand" />
+    </Style>
+
+    <Style Selector="Button.horos-button-secondary:pointerover">
+        <Setter Property="Background" Value="{DynamicResource BrushNavActiveBg}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BrushAccentPrimary}" />
+    </Style>
+
+    <Style Selector="Button.horos-button-primary">
+        <Setter Property="Background" Value="{DynamicResource BrushAccentSuccess}" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Foreground" Value="#FFFFFFFF" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="FontSize" Value="{DynamicResource FontSizeNav}" />
+        <Setter Property="CornerRadius" Value="{DynamicResource RadiusSm}" />
+        <Setter Property="Padding" Value="16,10" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+    </Style>
+
+    <Style Selector="Button.horos-button-primary:pointerover">
+        <Setter Property="Background" Value="#FF66BB6A" />
+    </Style>
+
+    <Style Selector="Button.horos-button-primary:disabled">
+        <Setter Property="Opacity" Value="0.55" />
+    </Style>
+
+    <Style Selector="Button.horos-button-danger">
+        <Setter Property="Background" Value="{DynamicResource BrushSurfaceElevated}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BrushError}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Foreground" Value="{DynamicResource BrushError}" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="CornerRadius" Value="{DynamicResource RadiusSm}" />
+        <Setter Property="Padding" Value="16,10" />
+        <Setter Property="Cursor" Value="Hand" />
+    </Style>
+
+    <Style Selector="Button.horos-button-danger:pointerover">
+        <Setter Property="Background" Value="{DynamicResource BrushNavActiveBg}" />
+    </Style>
+
+    <Style Selector="TextBlock.horos-error">
+        <Setter Property="Foreground" Value="{DynamicResource BrushError}" />
+        <Setter Property="FontSize" Value="{DynamicResource FontSizeAppTitle}" />
+        <Setter Property="TextWrapping" Value="Wrap" />
+    </Style>
+
+    <Style Selector="Border.horos-result-item">
+        <Setter Property="Background" Value="{DynamicResource BrushBackgroundBase}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BrushBorderDefault}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{DynamicResource RadiusSm}" />
+        <Setter Property="Padding" Value="10" />
+    </Style>
+
+</Styles>

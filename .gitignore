@@ -2,6 +2,7 @@
 scanner.so
 scanner.dll
 scanner.dylib
+libwinpthread-1.dll
 
 # Python cache
 __pycache__/
@@ -47,3 +48,12 @@ test_output/
 
 # Logs
 *.log
+
+# HorosCarver (.NET build outputs)
+HorosCarver/bin/
+HorosCarver/obj/
+HorosCarver/publish/
+*.binlog
+
+# Local scanner test output
+test_output_*/

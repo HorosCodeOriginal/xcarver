@@ -1,0 +1,105 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:HorosCarver.ViewModels"
+             xmlns:previews="using:HorosCarver.Views.Previews"
+             xmlns:conv="using:Avalonia.Data.Converters"
+             x:Class="HorosCarver.Views.Components.HorosScanOptionsPanel"
+             x:DataType="vm:ScanOptionsViewModel">
+
+    <Design.PreviewWith>
+        <previews:ScanOptionsPanelPreview />
+    </Design.PreviewWith>
+
+    <Border Classes="horos-card">
+        <StackPanel Spacing="16">
+            <TextBlock Text="Scan-Optionen"
+                       Classes="horos-section-title" />
+
+            <StackPanel Spacing="10">
+                <CheckBox Content="FS-aware Recovery"
+                          IsChecked="{Binding FsAwareRecovery}"
+                          Foreground="{DynamicResource BrushTextPrimary}" />
+                <CheckBox Content="Raw Carving"
+                          IsChecked="{Binding RawCarving}"
+                          Foreground="{DynamicResource BrushTextPrimary}" />
+                <CheckBox Content="Entropie-Skip (verschlüsselte Bereiche)"
+                          IsChecked="{Binding EntropySkip}"
+                          Foreground="{DynamicResource BrushTextPrimary}" />
+                <CheckBox Content="Session fortsetzen (--resume)"
+                          IsChecked="{Binding ResumeSession}"
+                          Foreground="{DynamicResource BrushTextPrimary}" />
+            </StackPanel>
+
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="16">
+                <StackPanel Grid.Column="0" Spacing="8">
+                    <TextBlock Text="Dateitypen"
+                               Foreground="{DynamicResource BrushTextMuted}"
+                               FontSize="{DynamicResource FontSizeAppTitle}" />
+                    <ComboBox ItemsSource="{Binding TypeFilters}"
+                              SelectedItem="{Binding SelectedTypeFilter}"
+                              MinHeight="40"
+                              HorizontalAlignment="Stretch"
+                              AutomationProperties.Name="Dateitypen" />
+                </StackPanel>
+                <StackPanel Grid.Column="1" Spacing="8">
+                    <TextBlock Text="Threads"
+                               Foreground="{DynamicResource BrushTextMuted}"
+                               FontSize="{DynamicResource FontSizeAppTitle}" />
+                    <NumericUpDown Minimum="1"
+                                   Maximum="6"
+                                   Value="{Binding ThreadCount}"
+                                   MinHeight="40"
+                                   HorizontalAlignment="Stretch"
+                                   AutomationProperties.Name="Threads" />
+                </StackPanel>
+            </Grid>
+            <StackPanel Spacing="8">
+                <TextBlock Text="Ausgabeordner"
+                           Foreground="{DynamicResource BrushTextMuted}"
+                           FontSize="{DynamicResource FontSizeAppTitle}" />
+                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                    <TextBox Grid.Column="0"
+                             Text="{Binding OutputDirectory}"
+                             MinHeight="40"
+                             VerticalContentAlignment="Center"
+                             PlaceholderText="./carved"
+                             AutomationProperties.Name="Ausgabeordner" />
+                    <Button Grid.Column="1"
+                            Classes="horos-button-secondary"
+                            Content="Ordner…"
+                            Command="{Binding BrowseOutputCommand}"
+                            MinHeight="40"
+                            MinWidth="100"
+                            AutomationProperties.Name="Ausgabeordner wählen" />
+                </Grid>
+            </StackPanel>
+
+            <TextBlock Text="{Binding ScanError}"
+                       IsVisible="{Binding ScanError, Converter={x:Static conv:StringConverters.IsNotNullOrEmpty}}"
+                       Classes="horos-error" />
+
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                <Button Grid.Column="0"
+                        Classes="horos-button-primary"
+                        Content="Scan starten"
+                        Command="{Binding StartScanCommand}"
+                        IsEnabled="{Binding !IsScanning}"
+                        MinHeight="44"
+                        AutomationProperties.Name="Scan starten" />
+                <Button Grid.Column="1"
+                        Classes="horos-button-danger"
+                        Content="Abbrechen"
+                        Command="{Binding CancelScanCommand}"
+                        IsVisible="{Binding IsScanning}"
+                        MinHeight="44"
+                        AutomationProperties.Name="Scan abbrechen" />
+            </Grid>
+
+            <TextBlock Text="Scan läuft… bitte warten."
+                       IsVisible="{Binding IsScanning}"
+                       Foreground="{DynamicResource BrushAccentPrimary}"
+                       FontSize="{DynamicResource FontSizeAppTitle}"
+                       HorizontalAlignment="Center" />
+        </StackPanel>
+    </Border>
+</UserControl>

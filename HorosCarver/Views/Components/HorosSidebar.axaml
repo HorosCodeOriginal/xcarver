@@ -1,0 +1,86 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:HorosCarver.ViewModels"
+             xmlns:previews="using:HorosCarver.Views.Previews"
+             x:Class="HorosCarver.Views.Components.HorosSidebar"
+             x:DataType="vm:SidebarViewModel"
+             x:Name="SidebarRoot"
+             Width="{DynamicResource SidebarWidth}">
+
+    <Design.PreviewWith>
+        <previews:ShellRegionPreview />
+    </Design.PreviewWith>
+
+    <Border Background="{DynamicResource BrushSurfaceDefault}"
+            BorderBrush="{DynamicResource BrushBorderDefault}"
+            BorderThickness="0,0,1,0">
+        <DockPanel LastChildFill="True">
+
+            <!-- Brand -->
+            <StackPanel DockPanel.Dock="Top"
+                        Margin="{DynamicResource Spacing6}"
+                        Spacing="8">
+                <StackPanel Orientation="Horizontal" Spacing="10">
+                    <Border Width="32" Height="32"
+                            CornerRadius="6"
+                            Background="{DynamicResource BrushNavActiveBg}"
+                            BorderBrush="{DynamicResource BrushAccentPrimary}"
+                            BorderThickness="1">
+                        <Grid>
+                            <Rectangle Width="14" Height="2"
+                                       Fill="{DynamicResource BrushAccentPrimary}"
+                                       VerticalAlignment="Center"
+                                       HorizontalAlignment="Center" />
+                            <Ellipse Width="6" Height="6"
+                                     Fill="{DynamicResource BrushAccentPrimary}"
+                                     VerticalAlignment="Top"
+                                     HorizontalAlignment="Center"
+                                     Margin="0,7,0,0" />
+                        </Grid>
+                    </Border>
+                    <StackPanel VerticalAlignment="Center" Spacing="2">
+                        <TextBlock Text="HorosCode" Classes="horos-brand" />
+                        <TextBlock Text="HorosCarver" Classes="horos-app-subtitle" />
+                    </StackPanel>
+                </StackPanel>
+            </StackPanel>
+
+            <Border DockPanel.Dock="Top"
+                    Height="1"
+                    Background="{DynamicResource BrushBorderDefault}"
+                    Margin="16,0" />
+
+            <!-- Navigation -->
+            <StackPanel Margin="8,12,8,16" Spacing="4">
+                <ItemsControl ItemsSource="{Binding Items}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate x:DataType="vm:NavItemViewModel">
+                            <Grid ColumnDefinitions="3,*" Height="{DynamicResource NavItemHeight}">
+                                <Border Grid.Column="0"
+                                        Width="3"
+                                        Background="{DynamicResource BrushAccentPrimary}"
+                                        IsVisible="{Binding IsSelected}" />
+                                <Button Grid.Column="1"
+                                        Classes="horos-nav"
+                                        Classes.active="{Binding IsSelected}"
+                                        Command="{Binding DataContext.SelectNavCommand, ElementName=SidebarRoot}"
+                                        CommandParameter="{Binding}"
+                                        AutomationProperties.Name="{Binding Label}">
+                                    <StackPanel Orientation="Horizontal" Spacing="10">
+                                        <TextBlock Text="{Binding IconGlyph}"
+                                                   FontSize="14"
+                                                   VerticalAlignment="Center"
+                                                   Foreground="{DynamicResource BrushTextMuted}" />
+                                        <TextBlock Text="{Binding Label}"
+                                                   VerticalAlignment="Center" />
+                                    </StackPanel>
+                                </Button>
+                            </Grid>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
+
+        </DockPanel>
+    </Border>
+</UserControl>

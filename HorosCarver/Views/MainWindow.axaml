@@ -1,0 +1,155 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:HorosCarver.ViewModels"
+        xmlns:components="using:HorosCarver.Views.Components"
+        x:Class="HorosCarver.Views.MainWindow"
+        x:DataType="vm:MainViewModel"
+        Title="HorosCarver | HorosCode — Forensic File Carver"
+        Icon="/Assets/horoscarver-icon.png"
+        Width="1280"
+        Height="800"
+        MinWidth="960"
+        MinHeight="640"
+        Background="{DynamicResource BrushBackgroundBase}">
+
+    <Design.DataContext>
+        <vm:MainViewModel />
+    </Design.DataContext>
+
+    <Grid RowDefinitions="*,Auto">
+        <Grid Grid.Row="0" ColumnDefinitions="Auto,*,Auto">
+            <components:HorosSidebar Grid.Column="0"
+                                     DataContext="{Binding Sidebar}" />
+            <ScrollViewer Grid.Column="1"
+                          HorizontalScrollBarVisibility="Disabled"
+                          VerticalScrollBarVisibility="Auto">
+                <StackPanel Margin="{DynamicResource Spacing6}"
+                            MaxWidth="720"
+                            HorizontalAlignment="Left"
+                            Spacing="16">
+
+                    <Border IsVisible="{Binding ShowSourcePanel}">
+                        <components:HorosSourcePanel DataContext="{Binding Source}" />
+                    </Border>
+
+                    <Border IsVisible="{Binding ShowScanPanel}">
+                        <components:HorosScanOptionsPanel DataContext="{Binding Scan}" />
+                    </Border>
+
+                    <Border IsVisible="{Binding ShowResultsHint}"
+                            Classes="horos-card">
+                        <StackPanel Spacing="12">
+                            <TextBlock Text="Ergebnisse"
+                                       Classes="horos-section-title" />
+                            <TextBlock Text="Die wiederhergestellten Dateien werden im rechten Panel angezeigt. Doppelklick oder Enter öffnet eine Datei."
+                                       Foreground="{DynamicResource BrushTextMuted}"
+                                       FontSize="{DynamicResource FontSizeNav}"
+                                       TextWrapping="Wrap" />
+                            <TextBlock Text="{Binding Results.SummaryLine}"
+                                       IsVisible="{Binding Results.HasResults}"
+                                       Foreground="{DynamicResource BrushAccentPrimary}"
+                                       FontSize="{DynamicResource FontSizeAppTitle}"
+                                       TextWrapping="Wrap" />
+                        </StackPanel>
+                    </Border>
+
+                    <Border IsVisible="{Binding ShowReportPanel}"
+                            Classes="horos-card">
+                        <StackPanel Spacing="12">
+                            <TextBlock Text="Scan-Bericht"
+                                       Classes="horos-section-title" />
+                            <TextBlock Text="{Binding Results.SummaryLine}"
+                                       IsVisible="{Binding Results.HasResults}"
+                                       Foreground="{DynamicResource BrushTextPrimary}"
+                                       FontSize="{DynamicResource FontSizeNav}"
+                                       TextWrapping="Wrap" />
+                            <Grid ColumnDefinitions="*,*"
+                                  IsVisible="{Binding Results.HasResults}"
+                                  ColumnSpacing="16">
+                                <StackPanel Grid.Column="0" Spacing="4">
+                                    <TextBlock Text="FS Recovery"
+                                               Classes="horos-status" />
+                                    <TextBlock Text="{Binding Results.FsRecovered}"
+                                               FontSize="20"
+                                               FontWeight="SemiBold"
+                                               Foreground="{DynamicResource BrushTextPrimary}" />
+                                </StackPanel>
+                                <StackPanel Grid.Column="1" Spacing="4">
+                                    <TextBlock Text="Raw Carving"
+                                               Classes="horos-status" />
+                                    <TextBlock Text="{Binding Results.RawRecovered}"
+                                               FontSize="20"
+                                               FontWeight="SemiBold"
+                                               Foreground="{DynamicResource BrushTextPrimary}" />
+                                </StackPanel>
+                            </Grid>
+                            <TextBlock Text="Gesamt wiederhergestellt"
+                                       IsVisible="{Binding Results.HasResults}"
+                                       Classes="horos-status" />
+                            <TextBlock Text="{Binding Results.TotalRecovered}"
+                                       IsVisible="{Binding Results.HasResults}"
+                                       FontSize="24"
+                                       FontWeight="SemiBold"
+                                       Foreground="{DynamicResource BrushAccentPrimary}" />
+                            <TextBlock Text="Noch kein Scan-Bericht vorhanden. Starten Sie einen Scan unter „Scan“."
+                                       IsVisible="{Binding !Results.HasResults}"
+                                       Foreground="{DynamicResource BrushTextMuted}"
+                                       FontSize="{DynamicResource FontSizeNav}"
+                                       TextWrapping="Wrap" />
+                        </StackPanel>
+                    </Border>
+
+                    <Border IsVisible="{Binding ShowSettingsPanel}"
+                            Classes="horos-card">
+                        <StackPanel Spacing="16"
+                                    HorizontalAlignment="Center"
+                                    Margin="0,24">
+                            <Border Width="64" Height="64"
+                                    CornerRadius="12"
+                                    Background="{DynamicResource BrushNavActiveBg}"
+                                    BorderBrush="{DynamicResource BrushAccentPrimary}"
+                                    BorderThickness="1"
+                                    HorizontalAlignment="Center">
+                                <Image Source="/Assets/horoscarver-icon.png"
+                                       Width="48" Height="48"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center" />
+                            </Border>
+                            <TextBlock Text="HorosCarver"
+                                       FontSize="22"
+                                       FontWeight="SemiBold"
+                                       Foreground="{DynamicResource BrushTextPrimary}"
+                                       HorizontalAlignment="Center" />
+                            <TextBlock Text="by HorosCode"
+                                       Classes="horos-brand"
+                                       HorizontalAlignment="Center" />
+                            <TextBlock Text="Forensic File Carver — C-Scanner mit 119 Signaturen"
+                                       Foreground="{DynamicResource BrushTextMuted}"
+                                       FontSize="{DynamicResource FontSizeNav}"
+                                       TextAlignment="Center"
+                                       TextWrapping="Wrap"
+                                       MaxWidth="400" />
+                            <TextBlock Text="{Binding AppVersion, StringFormat=Version {0}}"
+                                       Classes="horos-status"
+                                       HorizontalAlignment="Center" />
+                        </StackPanel>
+                    </Border>
+
+                </StackPanel>
+            </ScrollViewer>
+            <components:HorosResultsPanel Grid.Column="2"
+                                          DataContext="{Binding Results}" />
+        </Grid>
+
+        <Border Grid.Row="1"
+                Height="{DynamicResource StatusBarHeight}"
+                Background="{DynamicResource BrushSurfaceDefault}"
+                BorderBrush="{DynamicResource BrushBorderDefault}"
+                BorderThickness="0,1,0,0"
+                Padding="16,0">
+            <TextBlock Text="{Binding StatusText}"
+                       Classes="horos-status"
+                       VerticalAlignment="Center" />
+        </Border>
+    </Grid>
+</Window>

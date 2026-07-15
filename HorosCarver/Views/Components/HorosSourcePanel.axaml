@@ -1,0 +1,118 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:HorosCarver.ViewModels"
+             xmlns:previews="using:HorosCarver.Views.Previews"
+             xmlns:conv="using:Avalonia.Data.Converters"
+             x:Class="HorosCarver.Views.Components.HorosSourcePanel"
+             x:DataType="vm:SourceViewModel"
+             x:Name="SourceRoot">
+
+    <Design.PreviewWith>
+        <previews:SourcePanelPreview />
+    </Design.PreviewWith>
+
+    <Border Classes="horos-card">
+        <StackPanel Spacing="16">
+            <TextBlock Text="Datenquelle"
+                       Classes="horos-section-title" />
+
+            <Border Classes="horos-dropzone"
+                    MinHeight="{DynamicResource DropZoneMinHeight}"
+                    DragDrop.AllowDrop="True"
+                    DragDrop.DragOver="OnDragOver"
+                    DragDrop.Drop="OnDrop">
+                <StackPanel VerticalAlignment="Center"
+                            HorizontalAlignment="Center"
+                            Spacing="12">
+                    <Border Width="56" Height="56"
+                            CornerRadius="8"
+                            Background="{DynamicResource BrushNavActiveBg}"
+                            BorderBrush="{DynamicResource BrushBorderDefault}"
+                            BorderThickness="1"
+                            HorizontalAlignment="Center">
+                        <Grid HorizontalAlignment="Center"
+                              VerticalAlignment="Center">
+                            <Rectangle Width="28" Height="6"
+                                       RadiusX="2" RadiusY="2"
+                                       Fill="{DynamicResource BrushAccentPrimary}"
+                                       VerticalAlignment="Top"
+                                       Margin="0,14,0,0" />
+                            <Rectangle Width="20" Height="14"
+                                       RadiusX="2" RadiusY="2"
+                                       Fill="{DynamicResource BrushSurfaceElevated}"
+                                       Stroke="{DynamicResource BrushAccentPrimary}"
+                                       StrokeThickness="1"
+                                       VerticalAlignment="Bottom"
+                                       Margin="0,0,0,12" />
+                        </Grid>
+                    </Border>
+                    <TextBlock Text="{Binding DropHint}"
+                               Foreground="{DynamicResource BrushTextMuted}"
+                               FontSize="{DynamicResource FontSizeNav}"
+                               HorizontalAlignment="Center" />
+                    <TextBlock Text="{Binding SourcePath}"
+                               Foreground="{DynamicResource BrushAccentPrimary}"
+                               FontSize="{DynamicResource FontSizeAppTitle}"
+                               HorizontalAlignment="Center"
+                               TextWrapping="Wrap"
+                               MaxWidth="480"
+                               TextAlignment="Center" />
+                </StackPanel>
+            </Border>
+
+            <StackPanel IsVisible="{Binding IsPhysicalDevice}" Spacing="8">
+                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                    <ComboBox Grid.Column="0"
+                              ItemsSource="{Binding Devices}"
+                              SelectedItem="{Binding SelectedDevice}"
+                              MinHeight="40"
+                              PlaceholderText="Physisches Laufwerk wählen…"
+                              HorizontalAlignment="Stretch"
+                              AutomationProperties.Name="Physisches Laufwerk" />
+                    <Button Grid.Column="1"
+                            Classes="horos-button-secondary"
+                            Content="Aktualisieren"
+                            Command="{Binding RefreshDevicesCommand}"
+                            IsEnabled="{Binding !IsLoadingDevices}"
+                            MinHeight="40"
+                            MinWidth="110"
+                            AutomationProperties.Name="Geräte aktualisieren" />
+                </Grid>
+                <TextBlock Text="Geräte werden geladen…"
+                           IsVisible="{Binding IsLoadingDevices}"
+                           Classes="horos-status" />
+                <TextBlock Text="{Binding DeviceLoadError}"
+                           IsVisible="{Binding DeviceLoadError, Converter={x:Static conv:StringConverters.IsNotNullOrEmpty}}"
+                           Classes="horos-error" />
+            </StackPanel>
+
+            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12"
+                  IsVisible="{Binding !IsPhysicalDevice}">
+                <TextBox Grid.Column="0"
+                         Text="{Binding SourcePath}"
+                         PlaceholderText="Pfad zur Quelle…"
+                         MinHeight="40"
+                         VerticalContentAlignment="Center"
+                         AutomationProperties.Name="Quellpfad" />
+                <Button Grid.Column="1"
+                        Classes="horos-button-secondary"
+                        Content="Durchsuchen…"
+                        Command="{Binding BrowseCommand}"
+                        MinHeight="40"
+                        MinWidth="120"
+                        AutomationProperties.Name="Quelle durchsuchen" />
+            </Grid>
+
+            <StackPanel Spacing="8">
+                <TextBlock Text="Quelltyp"
+                           Foreground="{DynamicResource BrushTextMuted}"
+                           FontSize="{DynamicResource FontSizeAppTitle}" />
+                <ComboBox ItemsSource="{Binding SourceTypes}"
+                          SelectedItem="{Binding SelectedSourceType}"
+                          MinHeight="40"
+                          HorizontalAlignment="Stretch"
+                          AutomationProperties.Name="Quelltyp" />
+            </StackPanel>
+        </StackPanel>
+    </Border>
+</UserControl>

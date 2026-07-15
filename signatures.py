@@ -1181,7 +1181,19 @@ def get_signatures(types_filter: str | None = None) -> list:
     return result
 
 
+def _configure_stdio():
+    import sys
+    for stream in (sys.stdout, sys.stderr):
+        reconfigure = getattr(stream, "reconfigure", None)
+        if reconfigure:
+            try:
+                reconfigure(encoding="utf-8", errors="replace")
+            except Exception:
+                pass
+
+
 def list_signatures():
+    _configure_stdio()
     print(f"\n  {'Nom':<18} {'Ext':<8} {'MinSz':>8} {'MaxSz':>10} {'Cat':<14} Description")
     print(f"  {'─'*18} {'─'*8} {'─'*8} {'─'*10} {'─'*14} {'─'*35}")
     for cat in CATEGORIES:

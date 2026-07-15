@@ -1,0 +1,37 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:HorosCarver.ViewModels.Previews"
+        xmlns:components="using:HorosCarver.Views.Components"
+        x:Class="HorosCarver.Views.Previews.ShellRegionPreview"
+        x:DataType="vm:ShellRegionPreviewViewModel"
+        Title="Preview: R01 Shell + Sidebar"
+        Width="1280"
+        Height="800"
+        Background="{DynamicResource BrushBackgroundBase}">
+
+    <Grid RowDefinitions="*,Auto">
+        <Grid Grid.Row="0" ColumnDefinitions="Auto,*">
+            <components:HorosSidebar Grid.Column="0"
+                                     DataContext="{Binding Sidebar}" />
+            <Border Grid.Column="1"
+                    Background="{DynamicResource BrushBackgroundBase}"
+                    Padding="{DynamicResource Spacing6}">
+                <TextBlock Text="[Preview] Hauptbereich — Region 2"
+                           Foreground="{DynamicResource BrushTextMuted}"
+                           FontSize="{DynamicResource FontSizeNav}"
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Center" />
+            </Border>
+        </Grid>
+        <Border Grid.Row="1"
+                Height="{DynamicResource StatusBarHeight}"
+                Background="{DynamicResource BrushSurfaceDefault}"
+                BorderBrush="{DynamicResource BrushBorderDefault}"
+                BorderThickness="0,1,0,0"
+                Padding="16,0">
+            <TextBlock Text="{Binding StatusText}"
+                       Classes="horos-status"
+                       VerticalAlignment="Center" />
+        </Border>
+    </Grid>
+</Window>
